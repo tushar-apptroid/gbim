@@ -15,10 +15,10 @@ class User_model extends CI_Model {
 		$search = $filter['search'];
 	    if(!empty($search)){
 	        $or_search = array();
-	        $or_search[] = $db->nameQuote('u.first_name')." like  ".$db->quote('%'.$search.'%');
-	        $or_search[] = $db->nameQuote('u.last_name')." like  ".$db->quote('%'.$search.'%');
-	        $or_search[] = $db->nameQuote('u.email')." like  ".$db->quote('%'.$search.'%');
-	        $or_search[] = $db->nameQuote('u.phone_number')." like  ".$db->quote('%'.$search.'%');
+	        $or_search[] = "u.first_name like '%".$search."%'";
+	        $or_search[] = "u.last_name like  '%".$search."%'";
+	        $or_search[] = "u.email like '%".$search."%'";
+	        $or_search[] = "u.phone_number like '%".$search."%'";
 	        $where[] = 	count($or_search)>0 ?  "(".implode (" OR ",$or_search)." ) " : ""; 
 	    }
 

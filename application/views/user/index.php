@@ -27,7 +27,7 @@
 				<th>Actions</th>
 		    </tr>
 		    <tbody id="list-list"></tbody>
-		</table>\
+		</table>
 	</form>
 </div>
 

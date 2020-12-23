@@ -23,7 +23,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/gbim/';
+
+switch (ENVIRONMENT)
+{
+	case 'development':
+		$config['base_url'] = 'http://localhost/gbim/';
+	break;
+	case 'testing':
+		$config['base_url'] = '';
+		break;
+	case 'production':
+		$config['base_url'] = '';
+	break;
+}
+
 
 /*
 |--------------------------------------------------------------------------
