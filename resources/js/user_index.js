@@ -4,8 +4,8 @@ $(document).ready( function ()
  	$(document).on("click","#adduser",function()
  	{
  		var user_id = $('#addUserModal').attr('data-user_id');
- 		alert(user_id);
-		if(user_id == "" || user_id == undefined)
+ 		// alert(user_id);
+		if(user_id == "0" || user_id == undefined)
 		{
 			$.ajax({
 		    	url: GLOBALS.base_url+'api/adduser',
