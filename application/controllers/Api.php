@@ -8,6 +8,7 @@ class Api extends REST_Controller {
 	function __construct() 
 	{
 	   	parent::__construct();
+	   	// $this->output->enable_profiler(TRUE);
 	   	$this->load->model('User_model');
 	}
 
