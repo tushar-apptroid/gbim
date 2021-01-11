@@ -60,7 +60,146 @@ class User_model extends CI_Model {
 	{
 		return $this->db->delete('users', array('id'=>$user_id));
 	}
-}
 
-/* End of file User_model.php */
-/* Location: ./application/models/User_model.php */
+	function saveApiData($data)
+	{
+		$sql = "
+				SELECT
+					*
+				FROM
+					api_data
+				WHERE
+					api_id = '".$data->id."'";
+		$save_data = $this->db->query($sql)->row_array();
+		if(empty($save_data))
+		{
+			$insert_data = array();
+			$insert_data['api_id'] = $data->id;
+			$insert_data['title'] = $data->title;
+			$insert_data['name'] = $data->name;
+			$insert_data['group_id'] = $data->group_id;
+			$insert_data['is_active'] = $data->is_active;
+			$insert_data['exact_url'] = $data->exact_url;
+			$insert_data['subdomain_match'] = $data->subdomain_match;
+			$insert_data['depth'] = $data->depth;
+			$insert_data['check_freq'] = $data->check_freq;
+			$insert_data['check_day'] = $data->check_day;
+			$insert_data['guest_link'] = $data->guest_link;
+			$insert_data['created_on'] = date("Y-m-d H:i:s");
+			return $this->db->insert('api_data', $insert_data);
+		}
+	}
+
+	function get_api_data($postData=null)
+	{
+
+	    $response = array();
+
+	     $draw = $postData['draw'];
+	     $start = $postData['start'];
+	     $rowperpage = $postData['length']; // Rows display per page
+	     $columnIndex = $postData['order'][0]['column']; // Column index
+	     $columnName = $postData['columns'][$columnIndex]['data']; // Column name
+	     $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+	     $searchValue = $postData['search']['value']; // Search value
+
+ 		
+	     // $search_arr = array();
+	     // $searchQuery = "";
+	     // if($searchValue != '')
+	     // {
+	     //     $search_arr[] = " (api_data.api_id like '%".$searchValue."%' or 
+	     //         api_data.title like '%".$searchValue."%' or 
+	     //         api_data.name like '%".$searchValue."%' or 
+	     //         api_data.group_id like '%".$searchValue."%' or 
+	     //         api_data.check_day like '%".$searchValue."%' or 
+	     //         api_data.exact_url like '%".$searchValue."%' or 
+	     //         api_data.guest_link like '%".$searchValue."%' or 
+	     //         api_data.created_on like '%".$searchValue."%' ) ";
+	     // }
+
+
+	     // if(count($search_arr) > 0){
+	     //     $searchQuery = implode(" and ",$search_arr);
+	     // }
+
+	     $this->db->select('count(*) as allcount');
+	     $this->db->from('api_data');
+	     
+	     $records = $this->db->get()->result();
+	     $totalRecords = $records[0]->allcount;
+
+	     // $this->db->select('count(*) as allcount');
+	     // if($searchQuery != '')
+	     //     $this->db->where($searchQuery);
+	     //     $this->db->from('api_data');
+	         
+	     //     $records = $this->db->get()->result();
+	     //     $totalRecordwithFilter = $records[0]->allcount;
+
+	     //     $this->db->select('api_data.*');
+	     // if($searchQuery != '')
+	     //     $this->db->where($searchQuery);
+	     //     $this->db->order_by($columnName, $columnSortOrder);
+	         
+	     //     $this->db->limit($rowperpage, $start);
+	     //     $this->db->from('api_data');
+	         
+	     // $records = $this->db->get()->result();
+
+	     // $data = array();
+
+	     // foreach($records as $record ){
+	     //     $data[] = array( 
+	     //         "api_id"=>$record->api_id,
+	     //         "title"=>$record->title,
+	     //         "name"=>$record->name,
+	     //         "group_id"=>$record->group_id,
+	     //         "is_active"=>$record->is_active,
+	     //         "exact_url"=>$record->exact_url,
+	     //         "subdomain_match"=>$record->subdomain_match,
+	     //         "depth"=>$record->depth,
+	     //         "check_freq"=>$record->check_freq,
+	     //         "check_day"=>$record->check_day,
+	     //         "guest_link"=>$record->guest_link,
+	     //         "created_on"=>$record->created_on,
+	     //     ); 
+	     // }
+
+	    $sql = "
+	    	SELECT
+	    		*
+	    	FROM
+	    		api_data
+	    ORDER BY
+    		DATE(created_on)=DATE(CURRENT_TIMESTAMP) DESC,
+    		DATE(created_on)<DATE(CURRENT_TIMESTAMP) ASC,
+    		DATE(created_on)>DATE(CURRENT_TIMESTAMP) DESC";
+    		$records = $this->db->query($sql)->result();
+    	foreach($records as $record ){
+	         $data[] = array( 
+	             "api_id"=>$record->api_id,
+	             "title"=>$record->title,
+	             "name"=>$record->name,
+	             "group_id"=>$record->group_id,
+	             "is_active"=>$record->is_active,
+	             "exact_url"=>$record->exact_url,
+	             "subdomain_match"=>$record->subdomain_match,
+	             "depth"=>$record->depth,
+	             "check_freq"=>$record->check_freq,
+	             "check_day"=>$record->check_day,
+	             "guest_link"=>$record->guest_link,
+	             "created_on"=>$record->created_on,
+	         ); 
+	     }
+	     $response = array(
+	         "draw" => intval($draw),
+	         "iTotalRecords" => $totalRecords,
+	         "iTotalDisplayRecords" => $totalRecords,
+	         "aaData" => $data
+	     );
+// pr($response);exit;
+	     return $response; 
+	}
+
+}

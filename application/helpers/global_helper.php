@@ -14,22 +14,17 @@ function pr(&$a)
     echo '</pre>';
 }
 
-function commanCurlRequest($url = null,$request = null,$header_type = null,$request_type='POST')
+function commanCurlRequest($url = null,$request_type='POST',$request = null)
 {
 	if(empty($url))
 		return;
-	if(empty($request))
-		return;
 	
-    if (filter_var($url, FILTER_VALIDATE_URL) && $request!='')
+    if (filter_var($url, FILTER_VALIDATE_URL))
     {
         $ch = curl_init( $url );
         curl_setopt( $ch, CURLOPT_POST, 1 );
         curl_setopt( $ch, CURLOPT_POSTFIELDS, $request );
-        if(!empty($header_type))
-        {
-			curl_setopt( $ch, CURLOPT_HTTPHEADER, $header_type);
-        }
+		curl_setopt( $ch, CURLOPT_HTTPHEADER,  ["Authorization: Token ".SErankking_API_Key]);
         curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
         curl_setopt( $ch, CURLOPT_TIMEOUT, 120 );
         curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, 120 );
@@ -52,7 +47,6 @@ function commanCurlRequest($url = null,$request = null,$header_type = null,$requ
         else
         {
 			$response = json_decode($response);
-			$response->httpcode = $httpcode;
             return json_encode($response);
         }
     }
