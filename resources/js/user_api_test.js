@@ -31,9 +31,7 @@ $(document).ready(function(){
             { data: 'check_freq' },
             { data: 'check_day' },
             { data: 'created_on' },
-            // { data: 'guest_link' },
-            // { data: 'type' },
-            // { data: 'action' },
+
          ]
        });
 
